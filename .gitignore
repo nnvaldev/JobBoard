@@ -1,0 +1,15 @@
+# Dependencias de entorno (no commitear)
+.env
+.env.local
+apps/api/.env
+apps/web/.env.local
+
+node_modules
+dist
+.next
+.turbo
+*.log
+coverage
+.DS_Store
+apps/api/prisma/*.db
+apps/api/prisma/*.db-journal
