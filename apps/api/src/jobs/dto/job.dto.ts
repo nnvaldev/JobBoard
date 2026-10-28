@@ -9,7 +9,7 @@ import {
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { JobSeniority, JobStatus, JobType } from '@prisma/client';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 
 export class CreateJobDto {
   @ApiProperty()
@@ -137,7 +137,12 @@ export class JobsQueryDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @Type(() => Boolean)
+  // En la query llega como texto: Boolean('false') sería true. Se lee el valor
+  // original (obj[key]) porque la conversión implícita ya lo habría cambiado.
+  @Transform(({ obj, key }) => {
+    const raw = obj[key];
+    return raw === 'true' || raw === true ? true : raw === 'false' || raw === false ? false : raw;
+  })
   @IsBoolean()
   isRemote?: boolean;
 
